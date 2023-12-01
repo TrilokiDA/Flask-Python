@@ -1,19 +1,29 @@
-from flask import Flask, redirect, url_for, request, render_template
-from flask import jsonify
-from flask import abort
+from flask import Flask, redirect, url_for, request, render_template, Response,jsonify, abort
+from werkzeug.exceptions import HTTPException
 import pandas
+import json
 
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return "Hello, World!"
+# @app.route('/')
+# def index():
+#     res = "Hello, World!"
+#     return Response(res)
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    if isinstance(e, HTTPException):
+        code = e.code
+    else:
+        code = 500
+    ret = json.dumps({"error": str(e)})
+    return Response(ret, status=code, mimetype="application/json")
 
 ##### 1. Installation and Setup:
-# @app.route('/')
-# def hello_world():
-#     return ‘Hello, World! This is my Flask API.’
+@app.route('/')
+def hello_world():
+    return "Hello, World! This is my Flask API."
 
 
 ##### 2. Routing and Endpoints:
@@ -52,13 +62,13 @@ def index():
 
 
 ##### 5. Error Handling
-# @app.route('/user/<int:user_id>')
+# @app.route('/user/<user_id>')
 # def get_user_by_id(user_id):
 #     def get_user_from_database(id):
 #         return id
 #     user = get_user_from_database(user_id)
-#     if user is None:
-#         abort(404, description='User not found')
+#     if user.isdigit():
+#         abort(403, description='User not foundsfdsf')
 #     return jsonify(user)
 
 # @app.get('/upload-excel')
@@ -77,6 +87,10 @@ def index():
 #     # file.save(file.filename)
 #     data = pandas.read_excel(file)
 #     return data.to_html()
+
+@app.route('/thanks')
+def thanks():
+    return render_template('thanks.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
