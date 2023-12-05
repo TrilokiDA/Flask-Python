@@ -88,9 +88,9 @@ def hello_world():
 #     data = pandas.read_excel(file)
 #     return data.to_html()
 
-@app.route('/thanks')
-def thanks():
-    return render_template('thanks.html')
+# @app.route('/thanks')
+# def thanks():
+#     return render_template('thanks.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
